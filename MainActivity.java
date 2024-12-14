@@ -40,7 +40,7 @@ import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
 
-    private DatabaseHelper databaseHelper;
+    private Database database;
     private List<Product> spinner1Products, spinner2Products, spinner3Products;
     private Map<String, Product> selectedProducts = new HashMap<>();
     private TextView wynik;
@@ -59,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
 
-        databaseHelper = new DatabaseHelper(this);
+        database = new Database(this);
 
 
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -170,7 +170,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         for (Product product : selectedProducts.values()) {
-            databaseHelper.addProductToOrder(product);
+            database.addProductToOrder(product);
         }
 
         orderList.clear();
