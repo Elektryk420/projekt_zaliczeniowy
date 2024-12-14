@@ -1,16 +1,16 @@
 package com.example.projekt_zaliczeniowy_sklep;
 
-import android.app.Activity;
-import android.content.Context;
+
+
 import android.content.Intent;
-import android.content.pm.PackageManager;
+
 import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Bundle;
-import android.telephony.SmsManager;
+
 import android.util.Log;
 import android.view.Menu;
-import android.Manifest;
+
 
 
 import android.view.MenuItem;
@@ -28,8 +28,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
+
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -41,10 +40,10 @@ import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
 
-    private DatabaseHelper databaseHelper; // Obsługa bazy danych
+    private DatabaseHelper databaseHelper;
     private List<Product> spinner1Products, spinner2Products, spinner3Products;
-    private Map<String, Product> selectedProducts = new HashMap<>(); // Mapa wybranych produktów
-    private TextView wynik; // TextView do wyświetlania sumy
+    private Map<String, Product> selectedProducts = new HashMap<>();
+    private TextView wynik;
     private List<Order> orderList = new ArrayList<>();
     private EditText editTextName;
     private EditText editTextPhone;
@@ -59,23 +58,23 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // Inicjalizacja bazy danych
+
         databaseHelper = new DatabaseHelper(this);
 
-        // Toolbar
+
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        // Pobranie TextView do wyświetlania sumy
+
         wynik = findViewById(R.id.wynik);
 
         editTextName = findViewById(R.id.editTextName);
         editTextPhone = findViewById(R.id.editTextPhone);
 
-        // Inicjalizacja listy zamówień
+
         initializeOrderList();
 
-        // Spinner 1 i CheckBox
+
         CheckBox checkboxKomp = findViewById(R.id.checkbox_komp);
         Spinner spinner1 = findViewById(R.id.spinner1);
         spinner1Products = createSpinner1Products();
@@ -83,7 +82,7 @@ public class MainActivity extends AppCompatActivity {
 
         checkboxKomp.setOnClickListener(v -> handleCheckboxClick(checkboxKomp, spinner1, "Komp"));
 
-        // Spinner 2 i CheckBox
+
         CheckBox checkboxMysz = findViewById(R.id.checkbox_mysz);
         Spinner spinner2 = findViewById(R.id.spinner2);
         spinner2Products = createSpinner2Products();
@@ -91,7 +90,7 @@ public class MainActivity extends AppCompatActivity {
 
         checkboxMysz.setOnClickListener(v -> handleCheckboxClick(checkboxMysz, spinner2, "Mysz"));
 
-        // Spinner 3 i CheckBox
+
         CheckBox checkboxKlawiatura = findViewById(R.id.checkbox_klawiatura);
         Spinner spinner3 = findViewById(R.id.spinner3);
         spinner3Products = createSpinner3Products();
@@ -107,7 +106,7 @@ public class MainActivity extends AppCompatActivity {
         checkboxMonitorExtra.setOnClickListener(v -> handleCheckboxClick(checkboxMonitorExtra, spinnerMonitorExtra, "MonitorExtra"));
 
 
-        // Przycisk Zamówienie
+
         Button submitOrderButton = findViewById(R.id.guzik);
         submitOrderButton.setOnClickListener(v -> submitOrder());
     }
@@ -156,7 +155,7 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
 
-        // Zapisz imię użytkownika
+
         savedUserName = userName;
         savedPhoneNumber = phoneNumber;
 
@@ -181,20 +180,19 @@ public class MainActivity extends AppCompatActivity {
 
         Toast.makeText(this, "Zamówienie zapisane w bazie danych.", Toast.LENGTH_SHORT).show();
 
-        // Odświeżanie sumy i reset
+
         updateTotalPrice();
         resetOrder();
     }
 
 
     private void resetOrder() {
-        // Wyczyść mapę produktów
+
         selectedProducts.clear();
 
-        // Zresetuj sumę wyświetlaną w TextView
         wynik.setText("Koszt za zamówienie: 0.00 zł");
 
-        // Opcjonalnie: Resetowanie Spinnerów i CheckBoxów
+
         Spinner spinner1 = findViewById(R.id.spinner1);
         Spinner spinner2 = findViewById(R.id.spinner2);
         Spinner spinner3 = findViewById(R.id.spinner3);
@@ -226,7 +224,7 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-    //zamknicie klawaitury
+
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
@@ -285,7 +283,7 @@ public class MainActivity extends AppCompatActivity {
         return products;
     }
 
-// Podobnie dla innych spinnerów...
+
 
 
     private List<Product> createSpinner2Products() {
@@ -324,7 +322,7 @@ public class MainActivity extends AppCompatActivity {
             orderList.add(new Order(product.getName(), product.getPrice(), new Date()));
         }
 
-        // Logowanie zawartości orderList
+
         for (Order order : orderList) {
             Log.d("OrderList", order.toString());
         }
@@ -339,26 +337,26 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
 
-        // Pobranie imienia użytkownika z zapisanego pola
+
         String userName = savedUserName;
 
-        // Obliczenie sumy zamówień
+
         double totalSum = 0.0;
         for (Order order : orderList) {
             totalSum += order.getPrice();
         }
 
-        // Formatowanie daty ostatniego zamówienia
+
         Date lastOrderDate = orderList.get(orderList.size() - 1).getDate();
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault());
         String formattedDate = dateFormat.format(lastOrderDate);
 
-        // Tworzenie podsumowania
+
         String summary = "Imię: " + userName +
                 "\nŁączna suma: " + String.format("%.2f zł", totalSum) +
                 "\nData ostatniego zamówienia: " + formattedDate;
 
-        // Wyświetlenie podsumowania w AlertDialog
+
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Podsumowanie Zamówienia")
                 .setMessage(summary)
@@ -392,7 +390,7 @@ public class MainActivity extends AppCompatActivity {
         String userName = savedUserName;
         double totalSum = 0.0;
 
-        // Obliczanie sumy wszystkich zamówień
+
         for (Order order : orderList) {
             totalSum += order.getPrice();
         }
@@ -406,7 +404,7 @@ public class MainActivity extends AppCompatActivity {
         shareIntent.putExtra(Intent.EXTRA_SUBJECT, "Podsumowanie Zamówienia");
         shareIntent.putExtra(Intent.EXTRA_TEXT, orderSummary);
 
-        // Sprawdzenie, czy istnieje aplikacja do udostępniania
+
         if (shareIntent.resolveActivity(getPackageManager()) != null) {
             startActivity(Intent.createChooser(shareIntent, "Udostępnij zamówienie za pomocą:"));
         } else {
@@ -415,13 +413,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void sendSms() {
-        // Sprawdzenie, czy lista zamówień jest pusta
+
         if (orderList.isEmpty()) {
             Toast.makeText(this, "Nie ma żadnych zamówień do wysłania w SMS!", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        // Pobranie danych z orderList
+
         double totalSum = 0.0;
         StringBuilder productDetails = new StringBuilder();
 
@@ -433,23 +431,23 @@ public class MainActivity extends AppCompatActivity {
                     .append("\n");
         }
 
-        // Pobranie imienia użytkownika i daty ostatniego zamówienia
+
         String userName = savedUserName;
-        String phoneNumber = savedPhoneNumber; // Numer telefonu z Twojego zapisanego pola
+        String phoneNumber = savedPhoneNumber;
         Date lastOrderDate = getLastOrderDate();
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault());
         String formattedDate = dateFormat.format(lastOrderDate);
 
-        // Tworzenie wiadomości SMS
+
         String message = "Podsumowanie Zamówienia:\n" +
                 "Imię użytkownika: " + userName + "\n" +
                 "Łączna suma: " + String.format("%.2f zł", totalSum) + "\n" +
                 "Data ostatniego zamówienia: " + formattedDate + "\n" +
                 "Produkty:\n" + productDetails.toString();
 
-        // Utwórz Intent do wysyłki SMS
+
         Intent intent = new Intent(Intent.ACTION_SENDTO);
-        intent.setData(Uri.parse("smsto:" + phoneNumber)); // Dodanie numeru telefonu
+        intent.setData(Uri.parse("smsto:" + phoneNumber));
         intent.putExtra("sms_body", message);
 
         try {
@@ -462,22 +460,22 @@ public class MainActivity extends AppCompatActivity {
 
 
     public void sendEmail() {
-        // Pobierz imię użytkownika z EditText
+
         String userName = editTextName.getText().toString().trim();
 
-        // Sprawdź, czy imię użytkownika zostało podane
+
         if (userName.isEmpty()) {
             Toast.makeText(this, "Proszę podać swoje imię!", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        // Sprawdź, czy wybrano produkty
+
         if (selectedProducts.isEmpty()) {
             Toast.makeText(this, "Brak wybranych produktów do wysłania w e-mail!", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        // Zbuduj listę produktów i oblicz sumę
+
         StringBuilder productDetails = new StringBuilder();
         double totalPrice = 0.0;
         for (Map.Entry<String, Product> entry : selectedProducts.entrySet()) {
@@ -486,18 +484,18 @@ public class MainActivity extends AppCompatActivity {
             totalPrice += product.getPrice();
         }
 
-        // Pobierz aktualną datę
+
         String orderDate = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(new Date());
 
-        // Utwórz treść wiadomości e-mail
+
         String emailBody = "Imię: " + userName + "\n" +
                 "Suma zamówienia: " + String.format("%.2f zł", totalPrice) + "\n" +
                 "Data zamówienia: " + orderDate + "\n" +
                 "Produkty:\n" + productDetails.toString();
 
-        // Utwórz Intent do otwarcia domyślnej aplikacji e-mail
+
         Intent intent = new Intent(Intent.ACTION_SENDTO);
-        intent.setData(Uri.parse("mailto:")); // Otwiera aplikację e-mail
+        intent.setData(Uri.parse("mailto:"));
         intent.putExtra(Intent.EXTRA_SUBJECT, "Nowe zamówienie od: " + userName);
         intent.putExtra(Intent.EXTRA_TEXT, emailBody);
 
@@ -512,7 +510,7 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-    // Pobranie daty ostatniego zamówienia
+
     private Date getLastOrderDate() {
         if (orderList.isEmpty()) {
             return new Date();
