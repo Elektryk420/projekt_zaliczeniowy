@@ -461,7 +461,9 @@ public class MainActivity extends AppCompatActivity {
 
     public void sendEmail() {
 
-        String userName = editTextName.getText().toString().trim();
+
+        String userName = savedUserName;
+
 
 
         if (userName.isEmpty()) {
@@ -470,26 +472,28 @@ public class MainActivity extends AppCompatActivity {
         }
 
 
-        if (selectedProducts.isEmpty()) {
-            Toast.makeText(this, "Brak wybranych produktów do wysłania w e-mail!", Toast.LENGTH_SHORT).show();
-            return;
-        }
 
 
+
+        double totalSum = 0.0;
         StringBuilder productDetails = new StringBuilder();
-        double totalPrice = 0.0;
-        for (Map.Entry<String, Product> entry : selectedProducts.entrySet()) {
-            Product product = entry.getValue();
-            productDetails.append(product.getName()).append(" - ").append(String.format("%.2f zł", product.getPrice())).append("\n");
-            totalPrice += product.getPrice();
+
+        for (Order order : orderList) {
+            totalSum += order.getPrice();
+            productDetails.append(order.getName())
+                    .append(" - ")
+                    .append(String.format("%.2f zł", order.getPrice()))
+                    .append("\n");
         }
+
+
 
 
         String orderDate = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(new Date());
 
 
         String emailBody = "Imię: " + userName + "\n" +
-                "Suma zamówienia: " + String.format("%.2f zł", totalPrice) + "\n" +
+                "Suma zamówienia: " + String.format("%.2f zł", totalSum) + "\n" +
                 "Data zamówienia: " + orderDate + "\n" +
                 "Produkty:\n" + productDetails.toString();
 
